@@ -1,0 +1,17 @@
+// Create a map from AccountContactRelation object where Key is Contact and value is list of all ACR records of that Contact
+
+List<AccountContactRelation> listACR = [Select AccountId, ContactId from AccountContactRelation 
+                                                    Where RelationshipType__c = 'Practice-Practitioner' 
+                                                    AND ContactId IN :mapContacts.values()];
+        Map<Contact, List<AccountContactRelation>> mapConACR = new Map<Contact, List<AccountContactRelation>>();
+        for(AccountContactRelation itemACR:listACR){
+            if(mapConACR.isEmpty() || mapConACR.get(itemACR.ContactId)==null){
+                List<AccountContactRelation> tempList = new List<AccountContactRelation>();
+                tempList.add(itemACR);
+                mapConACR.put(itemACR.ContactId, tempList);
+            }
+            else{
+                mapConACR.get(itemACR.ContactId).add(itemACR);
+            }
+            
+        }
